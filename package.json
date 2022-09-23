@@ -1,0 +1,14 @@
+{
+  "name": "azuregatewayingestion",
+  "version": "1.0.0",
+  "description": "Connect to the Azure API Gatway, read API listings, get the OAS spec and create a listing in the RapidAPI hub.",
+  "main": "azureAPIGatewayIngest.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.27.2"
+  }
+}
