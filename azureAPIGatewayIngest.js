@@ -1,3 +1,4 @@
+require("dotenv").config();
 const axios = require("axios")
 
 var data = ""
@@ -10,37 +11,38 @@ const apiSpecs = {}
 const apiListings = {}
 
 //RapiAPI Rest PAPI Settings
-const OWNERID = ''; // Team Number for the Governance Team you will create
-const RESTURL = '' // Rest PAPI URL
-const RESTHOST = '' // Rest PAPI Host
-const RESTKEY = '' // Rest PAPI Key
+const rOwnerID = process.env.OWNER_ID //Team Number for the Governance Team you will create
+const rUrl = process.env.REST_URL
+const rHost = process.env.REST_HOST
+const rKey = process.env.REST_KEY
 
 //Rapid GraphQL PAPI Settings
-const GQLHOST = '' // GQL PAPI Host
-const GQLURL = '' // GQL PAPI URL
-const GQLRAPIDIDENTITYKEY = '' // GQL Personel PAPI Key
-const GQLRAPIDKEY = '' // GQL Team PAPI Key
+const gHost = process.env.GQL_HOST
+const gUrl = process.env.GQL_URL
+const gRapidIndentityKey = process.env.GQL_RAPID_IDENTITY_KEY
+const gRapidKey = process.env.GQL_RAPID_KEY
 
 //Rapid API Listing via form data settings
 var FILENAME = ``;
 const FormData = require('form-data');
 
 //Azure Settings
-const serviceGatway = '' // Set your Azure gateway name as defing 
-const azureGatewayName = serviceGatway.toLowerCase()
-const serviceGatwayApi = serviceGatway+"/apis"
+// const azureGatewayName = "myazureapigateway"
+const azureServiceGatway = process.env.AZURE_SERVICE_GATEWAY
+const azureGatewayName = azureServiceGatway.toLowerCase()
+const azureServiceGatwayApi = azureServiceGatway+"/apis"
 const azureBaseUrl = "https://" + azureGatewayName + ".management.azure-api.net"
-const resourceGroup = '' // Set your Azure resource group
-const provider = "Microsoft.ApiManagement"
-const azureAPIversion = "2021-12-01-preview"
+const azureResourceGroup = process.env.AZURE_RESOURCE_GROUP
+const azureProvider = process.env.AZURE_PROVIDER_NAME
+const azureAPIversion = process.env.AZURE_API_VERSION
 
 //Azure Subscription Details
-const subscription = '' // Set your Azure subscription id
-const sharedAccessKey = '' // Set your Azure SharedAccess Signature
+const azureSubscription = process.env.AZURE_SUBSCRIPTION
+const azureSharedAccessKey = process.env.AZURE_SHARED_ACCESS_KEY
 
 //Azure Gateway API Endpoints
-const azureAPISpecURL = `${azureBaseUrl}/subscriptions/${subscription}/resourceGroups/${resourceGroup}/providers/${provider}/service/${serviceGatway}/apis/`;
-const azureAPIListingURL = `${azureBaseUrl}/subscriptions/${subscription}/resourceGroups/${resourceGroup}/providers/Microsoft.ApiManagement/service/${serviceGatwayApi}`
+const azureAPISpecURL = `${azureBaseUrl}/subscriptions/${azureSubscription}/resourceGroups/${azureResourceGroup}/providers/${azureProvider}/service/${azureServiceGatway}/apis/`;
+const azureAPIListingURL = `${azureBaseUrl}/subscriptions/${azureSubscription}/resourceGroups/${azureResourceGroup}/providers/Microsoft.ApiManagement/service/${azureServiceGatwayApi}`
 
 //Created to await response from the RapidAPI PAPI
 function sleep(ms) {
@@ -60,12 +62,12 @@ async function getAPINamesFromAzureGW() {
             "api-version": azureAPIversion
         },
         "headers": {
-            "Authorization": sharedAccessKey,
+            "Authorization": azureSharedAccessKey,
             "Content-Type": "application/json; charset=utf-8"
         }
     }).then(resp => {
         data = resp.data;
-        // console.log(data);
+        console.log(data);
     }).catch(err => {
         console.error(err)
 
@@ -121,7 +123,7 @@ async function getApiSpecFromGateway(apiName) {
                     'api-version': azureAPIversion
                 },
                 headers: {
-                    Authorization: sharedAccessKey
+                    Authorization: azureSharedAccessKey
                 },
             }
         );
@@ -150,7 +152,7 @@ async function createHubListing(OAS, aName) {
     console.log("Spec for: ", aName, " received")
 
     let formData = new FormData();
-    formData.append('ownerId', OWNERID);
+    formData.append('ownerId', rOwnerID);
     console.log("Prepping OAS to create Hub Listing")
 
     //prep OAS payload with x-category
@@ -177,18 +179,18 @@ async function createHubListing(OAS, aName) {
         //Create the API Via PAPI
         formData.append('file', file, FILENAME);
 
-        axios.post(RESTURL, formData, {
+        axios.post(rUrl, formData, {
             headers: {
                 ...formData.getHeaders(),
-                'x-rapidapi-host': RESTHOST,
-                'x-rapidapi-key': RESTKEY
+                'x-rapidapi-host': rHost,
+                'x-rapidapi-key': rKey
             }
         }).then(function (response) {
             console.log(response.data);
         }).catch(function (error) {
             console.error("Error: ", error.response.data.status);
             if (error.response.data.status == 422) {
-                console.log("Unable to process: ", aName, ". Create empty project.")
+                console.log("Unable to process: ", aName, ". Creating empty project.")
                 apiPlaceholderProjectGQL(aName)
             }
 
@@ -202,12 +204,12 @@ async function apiPlaceholderProjectGQL(aName) {
 
     const options = {
         method: 'POST',
-        url: GQLURL,
+        url: gUrl,
         headers: {
             'content-type': 'application/json',
-            'x-rapidapi-identity-key': GQLRAPIDIDENTITYKEY,
-            'X-RapidAPI-Key': GQLRAPIDKEY,
-            'X-RapidAPI-Host': GQLHOST
+            'x-rapidapi-identity-key': gRapidIndentityKey,
+            'X-RapidAPI-Key': gRapidKey,
+            'X-RapidAPI-Host': gHost
         },
         data: { "query": `mutation createApi($apiCreateInput: ApiCreateInput!) {\n  createApi(api: $apiCreateInput) {\n    id\n  }\n}`, "variables": { "apiCreateInput": { "name": `${aName}`, "title": `${aName}`, "category": "Other", "description": "***API was detected on Azure Gateway, unable to process spec file to list on your API Hub", "version": { "name": "1.0" } } } }
         // data: body
@@ -242,6 +244,7 @@ async function processMultipleAPIs(apiNames) {
 
 async function walle() {
     try {
+
         //Get API Listing From Gateway and extract names
         await getAPINamesFromAzureGW();
         console.log("\n\n>>>Getting Specs for: ", apiNames);
