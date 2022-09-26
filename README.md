@@ -14,17 +14,29 @@ Run the following command
 
 Add local .env file with the following variables
 ```
+# Team ID for the Governance Team you have created in Rapid ENT tenent
 OWNER_ID=
+# REST URL of Platform API in ENT tenent
 REST_URL=
+# REST HOST of Platform API in ENT tenent
 REST_HOST=
+# REST API KEY for Platform API in ENT tenent
 REST_KEY=
-GQL_HOST=
+# URL of GQL Platform API in ENT tenent
 GQL_URL=
+# HOST of GQL Platform API in ENT tenent
+GQL_HOST=
+# Personal API Key used for GQL Platform API in ENT tenent
 GQL_RAPID_IDENTITY_KEY=
+# Team API Key used for GQL Platform API in ENT tenent
 GQL_RAPID_KEY=
+# Name of the Azure Gateway to export APIs from
 AZURE_SERVICE_GATEWAY=
+# Resource group used for Azure Gateway
 AZURE_RESOURCE_GROUP=
+# Subscription ID for Azure Gateway
 AZURE_SUBSCRIPTION_ID=
+# Access key for Azure Gateway
 AZURE_SHARED_ACCESS_KEY=
 ```
 
