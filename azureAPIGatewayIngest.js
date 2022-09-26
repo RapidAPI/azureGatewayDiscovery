@@ -1,4 +1,7 @@
 const axios = require("axios")
+const FormData = require('form-data');
+
+require('dotenv').config();
 
 var data = ""
 var json = ""
@@ -10,33 +13,32 @@ const apiSpecs = {}
 const apiListings = {}
 
 //RapiAPI Rest PAPI Settings
-const OWNERID = ''; // Team Number for the Governance Team you will create
-const RESTURL = '' // Rest PAPI URL
-const RESTHOST = '' // Rest PAPI Host
-const RESTKEY = '' // Rest PAPI Key
+const OWNERID = process.env.OWNER_ID; // Team Number for the Governance Team you will create
+const RESTURL = process.env.REST_URL; // Rest PAPI URL
+const RESTHOST = process.env.REST_HOST; // Rest PAPI Host
+const RESTKEY = process.env.REST_KEY; // Rest PAPI Key
 
 //Rapid GraphQL PAPI Settings
-const GQLHOST = '' // GQL PAPI Host
-const GQLURL = '' // GQL PAPI URL
-const GQLRAPIDIDENTITYKEY = '' // GQL Personel PAPI Key
-const GQLRAPIDKEY = '' // GQL Team PAPI Key
+const GQLHOST = process.env.GQL_HOST; // GQL PAPI Host
+const GQLURL = process.env.GQL_URL; // GQL PAPI URL
+const GQLRAPIDIDENTITYKEY = process.env.GQL_RAPID_IDENTITY_KEY; // GQL Personel PAPI Key
+const GQLRAPIDKEY = process.env.GQL_RAPID_KEY; // GQL Team PAPI Key
 
 //Rapid API Listing via form data settings
 var FILENAME = ``;
-const FormData = require('form-data');
 
 //Azure Settings
-const serviceGatway = '' // Set your Azure gateway name as defing 
-const azureGatewayName = serviceGatway.toLowerCase()
-const serviceGatwayApi = serviceGatway+"/apis"
-const azureBaseUrl = "https://" + azureGatewayName + ".management.azure-api.net"
-const resourceGroup = '' // Set your Azure resource group
+const serviceGatway = process.env.AZURE_SERVICE_GATEWAY; // Set your Azure gateway name as defing 
+const azureGatewayName = serviceGatway.toLowerCase();
+const serviceGatwayApi = serviceGatway+"/apis";
+const azureBaseUrl = "https://" + azureGatewayName + ".management.azure-api.net";
+const resourceGroup = proces.env.AZURE_RESOURCE_GROUP; // Set your Azure resource group
 const provider = "Microsoft.ApiManagement"
 const azureAPIversion = "2021-12-01-preview"
 
 //Azure Subscription Details
-const subscription = '' // Set your Azure subscription id
-const sharedAccessKey = '' // Set your Azure SharedAccess Signature
+const subscription = process.env.AZURE_SUBSCRIPTION_ID // Set your Azure subscription id
+const sharedAccessKey = process.env.AZURE_SHARED_ACCESS_KEY // Set your Azure SharedAccess Signature
 
 //Azure Gateway API Endpoints
 const azureAPISpecURL = `${azureBaseUrl}/subscriptions/${subscription}/resourceGroups/${resourceGroup}/providers/${provider}/service/${serviceGatway}/apis/`;
