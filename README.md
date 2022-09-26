@@ -7,6 +7,7 @@ For addition deatails on this setup, please reach out to James DeLuca for Azure 
 Batch import all APIs listed in Azure API Gateway into the RapidAPI Enterprise Hub
 
 ## Installation
+Run the following command
 ``` npm i ```
 
 ## Setup .env File
