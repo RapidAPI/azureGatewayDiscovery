@@ -12,15 +12,15 @@ https://www.notion.so/rapidapi/Azure-Gateway-API-Discovery-02f33835a547403284dc2
 
 ## Rapid REST PAPI Values
 OWNER_ID=''\
-REST_URL=''\
+REST_URL='{{your-rest_papi-api}}/v1/apis/rapidapi-file/admin'\
 REST_HOST=''\
 REST_KEY=''
 
 ## Rapid GQL PAPI Values
 GQL_HOST=''\
 GQL_URL=''\
-GQL_RAPID_IDENTITY_KEY=''\G
-QL_RAPID_KEY=''\
+GQL_RAPID_IDENTITY_KEY=''\
+GQL_RAPID_KEY=''\
 
 ## AZURE GATEWAY API Values
 AZURE_SERVICE_GATEWAY=''\
